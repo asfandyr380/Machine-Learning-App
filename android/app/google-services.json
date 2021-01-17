@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "605664671030",
+    "project_id": "machine-learning-app-826f2",
+    "storage_bucket": "machine-learning-app-826f2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:605664671030:android:fb5333ab55ec5d830cef97",
+        "android_client_info": {
+          "package_name": "com.asfandyr380.ai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "605664671030-7cjtpqom6kggrj4na4i8sbt86aa4t041.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdpe9-Zps0B9LgWEkHrTTiUgKFSZ3dq0Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "605664671030-7cjtpqom6kggrj4na4i8sbt86aa4t041.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
