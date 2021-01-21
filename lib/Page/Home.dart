@@ -126,7 +126,7 @@ List<Widget> myChildren({BuildContext context}) {
             path: "assets/magnifying-glass.svg",
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ComingSoon();
+                return Object();
               }));
             },
           ),
