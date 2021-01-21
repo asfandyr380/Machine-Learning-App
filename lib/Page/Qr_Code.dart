@@ -11,7 +11,6 @@ class QrCode extends StatefulWidget {
 }
 
 class _QrCodeState extends State<QrCode> {
-  TextEditingController _controller;
   String result = '';
 
   // Scan Qr Code Via Camera

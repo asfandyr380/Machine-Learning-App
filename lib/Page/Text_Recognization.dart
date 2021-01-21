@@ -15,6 +15,10 @@ class _TextRecognizationState extends State<TextRecognization> {
   String text = "";
   File file;
   bool isBusy = false;
+  double fontSize = 29;
+  final double baseFontSize = 29;
+  double fontScale = 1;
+  double baseFontScale = 1;
 
   void getImage() async {
     pickImage().then((value) {
@@ -26,7 +30,8 @@ class _TextRecognizationState extends State<TextRecognization> {
             isBusy = false;
           });
         });
-      }else print("No Image Selected");
+      } else
+        print("No Image Selected");
     });
   }
 
@@ -112,27 +117,36 @@ class _TextRecognizationState extends State<TextRecognization> {
                   width: 32,
                   height: 32,
                 ))),
-            InteractiveViewer(
-              child: Container(
-                child: isBusy
-                    ? Center(child: CircularProgressIndicator())
-                    : Center(
-                        child: FittedBox(
-                          fit: BoxFit.cover,
-                          child: SelectableText(
-                            text,
-                            style: defaultStyle,
-                          ),
+            Container(
+              child: isBusy
+                  ? Center(child: CircularProgressIndicator())
+                  : Center(
+                      child: GestureDetector(
+                        onScaleStart: (ScaleStartDetails startDetails) {
+                          baseFontScale = fontScale;
+                        },
+                        onScaleUpdate: (ScaleUpdateDetails updateDetails) {
+                          if (updateDetails.scale == 1.0) {
+                            return;
+                          } else {
+                            setState(() {
+                              fontScale =
+                                  (baseFontScale * updateDetails.scale)
+                                      .clamp(0.5, 5.0);
+                              fontSize = fontScale * baseFontSize;
+                            });
+                          }
+                        },  
+                        child: SelectableText(
+                          text,
+                          textScaleFactor: fontScale,
+                          style: defaultStyle,
                         ),
                       ),
-                margin: EdgeInsets.only(top: 10),
-                width: widthS * 0.6,
-                height: heightS * 0.22,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                ),
-              ),
+                    ),
+              margin: EdgeInsets.only(top: 10),
+              width: widthS * 0.8,
+              height: heightS * 0.22,
             ),
           ],
         ),
