@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:machin_learning_app/Services/Image_Picker.dart';
 import '../config.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:tflite/tflite.dart';
 import 'dart:io';
-import '../config.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:ui' as ui;
-
-const String ssd = 'SSD MobileNet';
+import 'Widgets/Scaffold.dart';
 
 class Object extends StatefulWidget {
   @override
@@ -22,12 +17,14 @@ class _ObjectState extends State<Object> {
   File _image;
   bool _busy = false;
   List _recognitions;
+
   @override
   void initState() {
     super.initState();
     loadTfModel();
   }
 
+  // Load TFlite Models
   void loadTfModel() async {
     Tflite.close();
     try {
@@ -39,14 +36,18 @@ class _ObjectState extends State<Object> {
     }
   }
 
-  void getImageFromGallary() async {
-    var pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
-    if (pickedFile == null) return;
-    _image = File(pickedFile.path);
-    setState(() {
-      _busy = true;
+  void getImageFromGallary() {
+    pickImage().then((value) {
+      if (value != null) {
+        _image = value;
+        setState(() {
+          _busy = true;
+        });
+        detectObject(_image);
+      } else {
+        print("No Image Selected");
+      }
     });
-    detectObject(_image);
   }
 
   detectObject(File image) async {
@@ -116,7 +117,10 @@ class _ObjectState extends State<Object> {
     List<Widget> stackChildren = [];
 
     stackChildren.add(Center(
-      child: _image == null ? Text("No Image Selected") : Image.file(_image),
+      child: Positioned(
+        width: size.width,
+        child: _image == null ? Text("No Image Selected") : Image.file(_image),
+      ),
     ));
 
     stackChildren.add(

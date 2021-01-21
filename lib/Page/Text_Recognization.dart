@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:ui' as ui;
+import 'package:machin_learning_app/Page/Widgets/Scaffold.dart';
+import 'package:machin_learning_app/Services/Image_Picker.dart';
 import 'dart:io';
 import '../config.dart';
 
@@ -16,23 +16,22 @@ class _TextRecognizationState extends State<TextRecognization> {
   File file;
   bool isBusy = false;
 
-  void pickImage() async {
-    var pickImage = await ImagePicker().getImage(source: ImageSource.gallery);
-
-    if (pickImage == null) {
-      print("Nothing Selected");
-    } else {
-      file = File(pickImage.path);
-      getImage(file).then((value) {
-        setState(() {
-          text = value;
-          isBusy = false;
+  void getImage() async {
+    pickImage().then((value) {
+      if (value != null) {
+        file = value;
+        processImage(file).then((value) {
+          setState(() {
+            text = value;
+            isBusy = false;
+          });
         });
-      });
-    }
+      }else print("No Image Selected");
+    });
   }
 
-  Future<String> getImage(File file) async {
+  // Processing Image to recognize Text
+  Future<String> processImage(File file) async {
     var visionImage = FirebaseVisionImage.fromFile(file);
     var textRecognizer = FirebaseVision.instance.textRecognizer();
 
@@ -43,6 +42,7 @@ class _TextRecognizationState extends State<TextRecognization> {
     final VisionText processedText =
         await textRecognizer.processImage(visionImage);
 
+    // Formating Processed Text from Image
     for (TextBlock block in processedText.blocks) {
       for (TextLine line in block.lines) {
         text = text + '\n';
@@ -51,7 +51,6 @@ class _TextRecognizationState extends State<TextRecognization> {
         }
       }
     }
-
     return text;
   }
 
@@ -59,23 +58,14 @@ class _TextRecognizationState extends State<TextRecognization> {
   Widget build(BuildContext context) {
     var widthS = MediaQuery.of(context).size.width;
     var heightS = MediaQuery.of(context).size.height;
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            setState(() {
-              text = "";
-            });
-            pickImage();
-          },
-          tooltip: "Pick Image",
-          backgroundColor: textandButton,
-          child: Align(
-              child: SvgPicture.asset(
-            "assets/plus.svg",
-            height: 24,
-            width: 24,
-          ))),
-      body: Container(
+    return DefaultScaffold(
+      onClick: () {
+        setState(() {
+          text = "";
+        });
+        getImage();
+      },
+      childWidget: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
@@ -122,24 +112,26 @@ class _TextRecognizationState extends State<TextRecognization> {
                   width: 32,
                   height: 32,
                 ))),
-            Container(
-              child: isBusy
-                  ? Center(child: CircularProgressIndicator())
-                  : Center(
-                      child: FittedBox(
-                        fit: BoxFit.cover,
-                        child: SelectableText(
-                          text + "\n",
-                          style: defaultStyle,
+            InteractiveViewer(
+              child: Container(
+                child: isBusy
+                    ? Center(child: CircularProgressIndicator())
+                    : Center(
+                        child: FittedBox(
+                          fit: BoxFit.cover,
+                          child: SelectableText(
+                            text,
+                            style: defaultStyle,
+                          ),
                         ),
                       ),
-                    ),
-              margin: EdgeInsets.only(top: 10),
-              width: widthS * 0.6,
-              height: heightS * 0.22,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
+                margin: EdgeInsets.only(top: 10),
+                width: widthS * 0.6,
+                height: heightS * 0.22,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                ),
               ),
             ),
           ],

@@ -6,6 +6,7 @@ import 'package:machin_learning_app/Page/Text_Recognization.dart';
 import 'package:machin_learning_app/Page/Object_Detection.dart';
 import '../config.dart';
 import 'Face_Detection.dart';
+import 'Widgets/CustomCard.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -47,10 +48,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   curve: Curves.elasticOut,
                   duration: Duration(seconds: 3),
                   style: isAnimated
-                      ? TextStyle(
-                          color: textandButton,
-                          fontSize: 32,
-                          fontFamily: "Schyler")
+                      ? defaultStyle.copyWith(fontSize: 32)
                       : TextStyle(
                           color: textandButton,
                           fontSize: 16,
@@ -66,11 +64,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             ),
             Flexible(
               child: Container(
-                child: Text("Machine Learning App",
-                    style: TextStyle(
-                        color: Color(0xff3D746E),
-                        fontSize: 21,
-                        fontFamily: "Schyler")),
+                child: Text(
+                  "Machine Learning App",
+                  style: defaultStyle.copyWith(
+                    fontSize: 21,
+                    color: Color(0xff3D746E),
+                  ),
+                ),
               ),
             ),
             AnimationLimiter(
@@ -95,50 +95,22 @@ List<Widget> myChildren({BuildContext context}) {
   return [
     Padding(
       padding: EdgeInsets.only(top: 40),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          CustomCard(
-            path: "assets/face-recognition.svg",
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return FaceDetection();
-              }));
-            },
-          ),
-          CustomCard(
-            path: "assets/text.svg",
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return TextRecognization();
-              }));
-            },
-          ),
-        ],
+      child: cardRow(
+        path1: "assets/face-recognition.svg",
+        path2: "assets/text.svg",
+        ctx: context,
+        returnType2: TextRecognization(),
+        returnType1: FaceDetection(),
       ),
     ),
     Padding(
       padding: EdgeInsets.only(top: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          CustomCard(
-            path: "assets/magnifying-glass.svg",
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return Object();
-              }));
-            },
-          ),
-          CustomCard(
-            path: "assets/qr-code-scan.svg",
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return QrCode();
-              }));
-            },
-          ),
-        ],
+      child: cardRow(
+        ctx: context,
+        path1: "assets/magnifying-glass.svg",
+        path2: "assets/qr-code-scan.svg",
+        returnType1: Object(),
+        returnType2: QrCode(),
       ),
     ),
     Padding(

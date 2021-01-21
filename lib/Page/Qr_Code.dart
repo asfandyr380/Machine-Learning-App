@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:qrscan/qrscan.dart';
 import '../config.dart';
+import 'Widgets/Scaffold.dart';
 
 class QrCode extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class _QrCodeState extends State<QrCode> {
   TextEditingController _controller;
   String result = '';
 
+  // Scan Qr Code Via Camera
   scanQr() async {
     await Permission.camera.request();
     String scanResult = await scan();
@@ -33,6 +35,7 @@ class _QrCodeState extends State<QrCode> {
     var widthS = MediaQuery.of(context).size.width;
     var heightS = MediaQuery.of(context).size.height;
     return DefaultScaffold(
+      iconPath: "assets/qr-code-scan.svg",
         onClick: scanQr,
         childWidget: Column(
           children: [
@@ -44,7 +47,7 @@ class _QrCodeState extends State<QrCode> {
             ),
             Container(
               margin: EdgeInsets.only(top: 30),
-              width: widthS * 0.8,
+              width: widthS * 0.9,
               height: heightS * 0.2,
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(24)),
